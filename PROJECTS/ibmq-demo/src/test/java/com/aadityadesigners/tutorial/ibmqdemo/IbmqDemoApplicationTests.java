@@ -1,13 +1,25 @@
 package com.aadityadesigners.tutorial.ibmqdemo;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jms.core.JmsTemplate;
+
+import com.aadityadesigners.tutorial.ibmqdemo.listener.Message;
 
 @SpringBootTest
 class IbmqDemoApplicationTests {
 
+	@Autowired ApplicationContext applicationContext;
+
 	@Test
 	void contextLoads() {
+		JmsTemplate jmsTemplate = applicationContext.getBean(JmsTemplate.class);
+		// Send a message with a POJO - the template reuse the message converter
+		System.out.println("Sending an message.");
+		Message hello = new Message(); hello.setMessage("Hello, how are you?");
+		jmsTemplate.convertAndSend("EWS.QUEUE.SENDPAYMENT", hello);
 	}
 
 }

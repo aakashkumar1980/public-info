@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SendPaymentNotification {
 
-    @JmsListener(destination = "EWS.QUEUE.SENDPAYMENT", containerFactory = "myFactory")
+    @JmsListener(destination = "EWS.QUEUE.SENDPAYMENT", containerFactory = "jmsFactory")
     public void receiveMessage(Message message) {
         System.out.println("Received <" + message + ">");
     }
