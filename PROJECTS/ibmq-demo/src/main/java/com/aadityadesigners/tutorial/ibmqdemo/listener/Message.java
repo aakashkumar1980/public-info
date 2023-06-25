@@ -8,4 +8,5 @@ import lombok.Data;
 public class Message {
     private String coorelationId = UUID.randomUUID().toString();
     private String message;
+
 }
