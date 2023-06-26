@@ -10,7 +10,10 @@ public class AppService {
     public Boolean testSampleTask() {
         System.out.println("[AppService] testSampleTask()");
 
-        if(_TEST_SHOULD_FAIL) throw new RuntimeException("TechnicalException occured.");
+        if(_TEST_SHOULD_FAIL) {
+            System.err.println("TechnicalException occured.");
+            throw new RuntimeException("TechnicalException occured.");
+        }
         return Boolean.TRUE;
     }
 }
