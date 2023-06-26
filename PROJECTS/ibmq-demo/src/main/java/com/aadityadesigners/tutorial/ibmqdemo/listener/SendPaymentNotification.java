@@ -1,31 +1,23 @@
 package com.aadityadesigners.tutorial.ibmqdemo.listener;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
+
+import com.aadityadesigners.tutorial.ibmqdemo.service.AppService;
 
 
 @Component
 public class SendPaymentNotification {
-    // TODO : Testing for IBM MQ retry
-    private static int failureAndSuccessCount= 0, failureAll= 0, MAX_FAILURE_COUNT = 3;
+
+    @Autowired AppService appService;
 
     @JmsListener(destination = "EWS.QUEUE.SENDPAYMENT", containerFactory = "jmsFactory")
     public void receiveMessage(Message message) {
-        System.out.println("Received <" + message + ">");
-
-
-        // TODO : Testing for IBM MQ retry
-        if(message.getMessage().contains("FAILURE_AND_SUCCESS")
-            && ((failureAndSuccessCount++)<MAX_FAILURE_COUNT)) {
-            System.err.println("[failureAndSuccessCount:"+failureAndSuccessCount+"] Technical Exception Occured.");
-
-            try {Thread.currentThread().sleep(3000);} catch (InterruptedException e) {}
-            throw new RuntimeException("Technical Exception Occured");
-
-        } else if(message.getMessage().contains("FAILURE_ALL")) {
-            System.err.println("[failureAll:"+(failureAll++)+"] Technical Exception Occured.");
-            throw new RuntimeException("Technical Exception Occured");
-        }
+        System.out.println("[SendPaymentNotification] receiveMessage(message: "+message+")");
+        
+        // TODO: Testing
+        appService.testSampleTask();
         
     }
 }

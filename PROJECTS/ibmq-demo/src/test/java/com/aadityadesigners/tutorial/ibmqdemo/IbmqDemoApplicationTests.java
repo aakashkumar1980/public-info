@@ -1,5 +1,6 @@
 package com.aadityadesigners.tutorial.ibmqdemo;
 
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -7,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.jms.core.JmsTemplate;
 
 import com.aadityadesigners.tutorial.ibmqdemo.listener.Message;
+import com.aadityadesigners.tutorial.ibmqdemo.service.AppService;
 
 @SpringBootTest
 class IbmqDemoApplicationTests {
@@ -16,35 +18,28 @@ class IbmqDemoApplicationTests {
 	@Test
 	void mqSuccess() {
 		JmsTemplate jmsTemplate = applicationContext.getBean(JmsTemplate.class);
-		// Send a message with a POJO - the template reuse the message converter
-		System.out.println("Sending a SUCCESS message.");
-		Message hello = new Message(); 
-		hello.setMessage("This is a SUCCESS message.");
-		jmsTemplate.convertAndSend("EWS.QUEUE.SENDPAYMENT", hello);
-		try {Thread.currentThread().sleep(15000);} catch (InterruptedException e) {}
+
+		System.out.println("[IbmqDemoApplicationTests] mqSuccess()");
+		AppService._TEST_SHOULD_FAIL = Boolean.FALSE;
+		Message message = new Message(); message.setMessage("This is a SUCCESS message."); 
+		jmsTemplate.convertAndSend("EWS.QUEUE.SENDPAYMENT", message);
 	}
 
-
+	
 	@Test
-	void mqFailureAndSuccess() {
+	void mqFailure() {
 		JmsTemplate jmsTemplate = applicationContext.getBean(JmsTemplate.class);
-		// Send a message with a POJO - the template reuse the message converter
-		System.out.println("Sending a FAILURE_AND_SUCCESS message.");
-		Message hello = new Message(); 
-		hello.setMessage("This is a FAILURE_AND_SUCCESS message.");
-		jmsTemplate.convertAndSend("EWS.QUEUE.SENDPAYMENT", hello);
 
-		try {Thread.currentThread().sleep(15000);} catch (InterruptedException e) {}
+		System.out.println("[IbmqDemoApplicationTests] mqFailure()");
+		AppService._TEST_SHOULD_FAIL = Boolean.TRUE;
+		Message message = new Message(); message.setMessage("This is a FAILURE message."); 
+		jmsTemplate.convertAndSend("EWS.QUEUE.SENDPAYMENT", message);
 	}
 	@Test
-	void mqFailureAll() {
-		JmsTemplate jmsTemplate = applicationContext.getBean(JmsTemplate.class);
-		// Send a message with a POJO - the template reuse the message converter
-		System.out.println("Sending a FAILURE_ALL message.");
-		Message hello = new Message(); 
-		hello.setMessage("This is a FAILURE_ALL message.");
-		jmsTemplate.convertAndSend("EWS.QUEUE.SENDPAYMENT", hello);
+	void mqSuccessAfterFailure() {
+		System.out.println("[IbmqDemoApplicationTests] mqSuccessAfterFailure()");
+		AppService._TEST_SHOULD_FAIL = Boolean.FALSE;
+	}	
 
-		try {Thread.currentThread().sleep(15000);} catch (InterruptedException e) {}
-	}
+
 }
